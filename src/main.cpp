@@ -5,6 +5,10 @@
 const int buttonPin = D3;
 
 IPAddress server(192,168,2,101);
+IPAddress ip(192, 168, 2, 25); 
+IPAddress gateway(192, 168, 2, 1);
+IPAddress subnet(255, 255, 255, 0);
+IPAddress dns(8, 8, 8, 8); 
 
 const char* ssid     = "Papillon";
 const char* password = "70445312";
@@ -18,6 +22,9 @@ PubSubClient client(WIFIclient);
 
 unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+
+// sleep for this many seconds
+const int sleepSeconds = 3;
 
 void reconnect() {
   // Loop until we're reconnected
@@ -44,8 +51,12 @@ void setup() {
   // initialize serial for debugging
   Serial.begin(115200);
 
+  pinMode(D0, WAKEUP_PULLUP);
+  
   // initialize WiFi
   WiFi.mode(WIFI_STA);
+  WiFi.config(ip, gateway, subnet, dns);
+
   WiFi.begin(ssid, password);
   
   while (WiFi.status() != WL_CONNECTED) {
@@ -64,6 +75,7 @@ void setup() {
 
   // Configure button port
   pinMode(buttonPin,  INPUT_PULLUP);
+  // pinMode(buttonPin, WAKEUP_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
   delay(50);
@@ -76,7 +88,10 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
   delay(50);
   digitalWrite(LED_BUILTIN, HIGH);
-}
+
+  // We go to sleep
+  //ESP.deepSleep(0);
+} 
 
 void loop() {
   // put your main code here, to run repeatedly:
