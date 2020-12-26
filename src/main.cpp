@@ -31,7 +31,7 @@ void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection.......");
     // Attempt to connect, just a name to identify the client
-    if (client.connect("DHT22Sensor1")) {
+    if (client.connect("Button1")) {
       Serial.println("connected");
       // Once connected, publish an announcement...
 //      client.publish("Papillon/dev02/status","hello world");
